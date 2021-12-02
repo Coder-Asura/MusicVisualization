@@ -84,6 +84,7 @@ public class RecordService extends Service {
 
 
     public static void startRecording(Context context) {
+        RecordHelper.getInstance().initContext(context);
         Intent intent = new Intent(context, RecordService.class);
         intent.putExtra(ACTION_NAME, ACTION_START_RECORD);
         intent.putExtra(PARAM_PATH, getFilePath());

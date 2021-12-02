@@ -1,10 +1,13 @@
 package com.zlw.main.recorderlib.recorder;
 
+import android.content.Context;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+
+import androidx.core.content.ContextCompat;
 
 import com.zlw.main.recorderlib.recorder.listener.RecordDataListener;
 import com.zlw.main.recorderlib.recorder.listener.RecordFftDataListener;
@@ -54,6 +57,12 @@ public class RecordHelper {
     private Mp3EncodeThread mp3EncodeThread;
 
     private RecordHelper() {
+    }
+
+    private Context context;
+
+    void initContext(Context context) {
+        this.context = context;
     }
 
     static RecordHelper getInstance() {
@@ -231,7 +240,7 @@ public class RecordHelper {
         for (int i = offsetStart; i < length; i++) {
             sum += data[i] * data[i];
         }
-        ave = sum / (length - offsetStart) ;
+        ave = sum / (length - offsetStart);
         return (int) (Math.log10(ave) * 20);
     }
 
@@ -456,7 +465,7 @@ public class RecordHelper {
      * 实例 record_20160101_13_15_12
      */
     private String getTempFilePath() {
-        String fileDir = String.format(Locale.getDefault(), "%s/Record/", Environment.getExternalStorageDirectory().getAbsolutePath());
+        String fileDir = String.format(Locale.getDefault(), "%s/Record/", ContextCompat.getExternalFilesDirs(context, Environment.DIRECTORY_MUSIC)[0].getAbsolutePath());
         if (!FileUtils.createOrExistsDir(fileDir)) {
             Logger.e(TAG, "文件夹创建失败：%s", fileDir);
         }
