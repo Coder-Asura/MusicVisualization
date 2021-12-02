@@ -22,8 +22,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
-import android.support.annotation.RawRes;
+
 import android.util.Log;
+
+import androidx.annotation.RawRes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
