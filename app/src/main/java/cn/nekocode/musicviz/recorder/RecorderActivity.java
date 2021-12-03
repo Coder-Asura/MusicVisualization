@@ -1,5 +1,6 @@
 package cn.nekocode.musicviz.recorder;
 
+import android.content.Intent;
 import android.media.AudioFormat;
 import android.os.Bundle;
 import android.os.Environment;
@@ -193,7 +194,7 @@ public class RecorderActivity extends AppCompatActivity implements AdapterView.O
         recordManager.setRecordFftDataListener(new RecordFftDataListener() {
             @Override
             public void onFftData(byte[] data) {
-                //                audioView.setWaveData(data);
+                bingding.audioView.setWaveData(data);
             }
         });
     }
@@ -214,7 +215,7 @@ public class RecorderActivity extends AppCompatActivity implements AdapterView.O
         bingding.jumpTestActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //                startActivity(new Intent(this, TestHzActivity.class));
+                startActivity(new Intent(RecorderActivity.this, TestHzActivity.class));
             }
         });
 
@@ -244,15 +245,14 @@ public class RecorderActivity extends AppCompatActivity implements AdapterView.O
         }
     }
 
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()) {
             case R.id.spUpStyle:
-                //                audioView.setStyle(AudioView.ShowStyle.getStyle(STYLE_DATA[position]), audioView.getDownStyle());
+                bingding.audioView.setStyle(AudioView.ShowStyle.getStyle(STYLE_DATA[position]), bingding.audioView.getDownStyle());
                 break;
             case R.id.spDownStyle:
-                //                audioView.setStyle(audioView.getUpStyle(), AudioView.ShowStyle.getStyle(STYLE_DATA[position]));
+                bingding.audioView.setStyle(bingding.audioView.getUpStyle(), AudioView.ShowStyle.getStyle(STYLE_DATA[position]));
                 break;
             default:
                 break;
