@@ -71,7 +71,7 @@ public class RecorderActivity extends AppCompatActivity implements AdapterView.O
     }
 
     private void initAudioView() {
-        bingding.tvState.setVisibility(View.GONE);
+//        bingding.tvState.setVisibility(View.GONE);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, STYLE_DATA);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bingding.spUpStyle.setAdapter(adapter);

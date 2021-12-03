@@ -18,7 +18,7 @@
 <!--        <activity-->
 <!--            android:name=".recorder.RecorderActivity"-->
         <activity
-            android:name=".MainActivity"
+            android:name=".music.MusicVisualizationActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -16,6 +16,13 @@
             android:layout_height="wrap_content"
             android:text="状态：%s" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="6dp"
+            android:background="#666" />
+
         <TextView
             android:id="@+id/tvSoundSize"
             android:layout_width="match_parent"
