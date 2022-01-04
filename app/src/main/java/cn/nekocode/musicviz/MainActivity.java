@@ -22,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.audiofx.Visualizer;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,20 +37,21 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import cn.nekocode.musicviz.render.GLScene;
 import cn.nekocode.musicviz.render.SceneController;
 import cn.nekocode.musicviz.render.VisualizerRenderer;
 import cn.nekocode.musicviz.scene.BasicSpectrumScene;
-import cn.nekocode.musicviz.scene.CircSpectrumScene;
 import cn.nekocode.musicviz.scene.ChlastScene;
+import cn.nekocode.musicviz.scene.CircSpectrumScene;
 import cn.nekocode.musicviz.scene.EnhancedSpectrumScene;
 import cn.nekocode.musicviz.scene.InputSoundScene;
 import cn.nekocode.musicviz.scene.OriginScene;
+import cn.nekocode.musicviz.scene.RainbowSpectrumScene;
 import cn.nekocode.musicviz.scene.Sa2WaveScene;
 import cn.nekocode.musicviz.scene.WavesRemixScene;
-import cn.nekocode.musicviz.scene.RainbowSpectrumScene;
 
 /**
  * @author nekocode (nekocode.cn@gmail.com)
@@ -103,10 +105,12 @@ public class MainActivity extends AppCompatActivity implements Visualizer.OnData
         }
     }
 
-    private void start() {
-        int captureSize = Visualizer.getCaptureSizeRange()[1];
-        captureSize = captureSize > 512 ? 512 : captureSize;
+    int captureSize = 512;
 
+    private void start() {
+        Log.d("asuralxd", "getCaptureSizeRange " + Arrays.toString(Visualizer.getCaptureSizeRange()));
+        captureSize = Visualizer.getCaptureSizeRange()[1];
+        captureSize = captureSize > 512 ? 512 : captureSize;
         /*
           Setup texture view
          */
@@ -148,24 +152,40 @@ public class MainActivity extends AppCompatActivity implements Visualizer.OnData
         /*
           Setup media player and play music
          */
-        mPlayer = MediaPlayer.create(this, R.raw.youhebuke);
-        mPlayer.setLooping(true);
+        mPlayer = MediaPlayer.create(this, R.raw.simple_drum_beat);
+        mPlayer.setLooping(false);
         mPlayer.start();
+        mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                Log.d("asuralxd", "onPrepared");
+                mVisualizer = new Visualizer(mPlayer.getAudioSessionId());
+                mVisualizer.setCaptureSize(captureSize);
+                Log.d("asuralxd", "getMaxCaptureRate " + Visualizer.getMaxCaptureRate());
+                mVisualizer.setDataCaptureListener(MainActivity.this, Visualizer.getMaxCaptureRate(), true, true);
+                // Start capturing
+                mVisualizer.setEnabled(true);
+            }
+        });
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Log.d("asuralxd", "onCompletion");
+                mVisualizer.setEnabled(false);
+            }
+        });
 
-        mVisualizer = new Visualizer(mPlayer.getAudioSessionId());
-        mVisualizer.setCaptureSize(captureSize);
-        mVisualizer.setDataCaptureListener(this, Visualizer.getMaxCaptureRate(), true, true);
-        // Start capturing
-        mVisualizer.setEnabled(true);
     }
 
     @Override
     public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
+        Log.d("asuralxd", "onWaveFormDataCapture " + samplingRate + " " + waveform.length + " " + waveform);
         mRender.updateWaveFormFrame(new WaveFormFrame(waveform, 0, waveform.length / 2));
     }
 
     @Override
     public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
+        Log.d("asuralxd", "onFftDataCapture " + samplingRate + " " + fft.length + " " + Arrays.toString(fft));
         mRender.updateFFTFrame(new FFTFrame(fft, 0, fft.length / 2));
     }
 
@@ -176,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements Visualizer.OnData
             int id = 0;
             for (Pair<String, ? extends GLScene> pair : mSceneList) {
                 menu.add(0, id, id, pair.first);
-                id ++;
+                id++;
             }
         }
         return super.onCreateOptionsMenu(menu);

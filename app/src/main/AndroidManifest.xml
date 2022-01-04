@@ -17,6 +17,8 @@
         android:theme="@style/AppTheme">
 <!--        <activity-->
 <!--            android:name=".recorder.RecorderActivity"-->
+<!--        <activity-->
+<!--            android:name=".MainActivity"-->
         <activity
             android:name=".music.MusicVisualizationActivity"
             android:exported="true">
